@@ -11,6 +11,20 @@ import calendar
 
 width, height = 60, 25
 
+def add_close_button(self, command):
+        btn = tk.Button(
+            self.root,
+            text="x",
+            command=command,
+            bg="#1a1a1a",
+            fg="#f55",
+            bd=0,
+            font=("Courier", 10, "bold"),
+            activebackground="#1a1a1a",
+            activeforeground="#faa"
+        )
+        btn.place(x=6, y=4)
+
 class WidgetMenu:
     def __init__(self):
         self.root = tk.Tk()
@@ -19,13 +33,16 @@ class WidgetMenu:
         self.root.attributes("-alpha", 0.9)
         self.root.configure(bg="#1a1a1a")
         
-        self.root.geometry("250x500")
+        self.root.geometry("250x600")
         self.root.title("Widgets")
+        close_btn = tk.Button(self.root, text="x", command=self.root.destroy, bg="#1a1a1a", fg="#f55", bd=0, font=("Courier", 10, "bold"), activebackground="#333", activeforeground="#faa")
+        close_btn.place(x=6,y=4)
         
         self.widgets = {}
         
         frame = tk.Frame(self.root, bg="#1a1a1a")
         frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+        close_btn.lift()
         
         tk.Label(frame, text="виджеты", bg="#1a1a1a", fg="#fff", font=("Courier", 14, "bold")).pack(pady=15)
         
@@ -36,6 +53,10 @@ class WidgetMenu:
         self.create_widget_button(frame, "заметки", self.toggle_notes)
         self.create_widget_button(frame, "секундомер", self.toggle_stopwatch)
         self.create_widget_button(frame, "слоты", self.toggle_slots)
+        self.create_widget_button(frame, "генератор чисел", self.toggle_random)
+        self.create_widget_button(frame, "цветной градиент", self.toggle_gradient)
+        self.create_widget_button(frame, "таймер", self.toggle_countdown)
+        self.create_widget_button(frame, "блэкджек", self.toggle_blackjack)
         
         self.offset_x, self.offset_y = 0, 0
         self.root.bind("<Button-3>", self.start_drag)
@@ -44,6 +65,9 @@ class WidgetMenu:
         frame.bind("<B3-Motion>", self.drag_window)
         
         self.root.bind("<Escape>", lambda e: self.root.destroy())
+        
+
+    
     
     def create_widget_button(self, parent, text, command):
         btn = tk.Button(parent, text=text, command=command, bg="#333", fg="#fff", 
@@ -148,6 +172,62 @@ class WidgetMenu:
             widget.key = "slots"
             self.widgets["slots"] = widget
     
+    def toggle_random(self):
+        if "random" in self.widgets:
+            try:
+                if self.widgets["random"].root.winfo_exists():
+                    self.widgets["random"].root.destroy()
+            except:
+                pass
+            del self.widgets["random"]
+        else:
+            widget = RandomNumberWidget()
+            widget.menu = self
+            widget.key = "random"
+            self.widgets["random"] = widget
+    
+    def toggle_gradient(self):
+        if "gradient" in self.widgets:
+            try:
+                if self.widgets["gradient"].root.winfo_exists():
+                    self.widgets["gradient"].root.destroy()
+            except:
+                pass
+            del self.widgets["gradient"]
+        else:
+            widget = ColorGradientWidget()
+            widget.menu = self
+            widget.key = "gradient"
+            self.widgets["gradient"] = widget
+    
+    def toggle_countdown(self):
+        if "countdown" in self.widgets:
+            try:
+                if self.widgets["countdown"].root.winfo_exists():
+                    self.widgets["countdown"].root.destroy()
+            except:
+                pass
+            del self.widgets["countdown"]
+        else:
+            widget = CountdownTimerWidget()
+            widget.menu = self
+            widget.key = "countdown"
+            self.widgets["countdown"] = widget
+    
+    def toggle_blackjack(self):
+        if "blackjack" in self.widgets:
+            try:
+                if self.widgets["blackjack"].root.winfo_exists():
+                    self.widgets["blackjack"].root.destroy()
+            except:
+                pass
+            del self.widgets["blackjack"]
+        else:
+            widget = BlackjackWidget()
+            widget.menu = self
+            widget.key = "blackjack"
+            self.widgets["blackjack"] = widget
+    
     def remove_widget(self, key):
         if key in self.widgets:
             try:
@@ -172,9 +252,12 @@ class SystemStatsWidget:
         self.root.configure(bg="#1a1a1a")
         
         self.root.geometry("250x80")
+        close_btn = tk.Button(self.root, text="x", command=self.on_close, bg="#1a1a1a", fg="#f55", bd=0, font=("Courier", 10, "bold"), activebackground="#333", activeforeground="#faa")
+        close_btn.place(x=6,y=4)
         
         frame = tk.Frame(self.root, bg="#1a1a1a")
         frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+        close_btn.lift()
         
         self.label = tk.Label(frame, text="CPU: 0% | RAM: 0%", bg="#1a1a1a", 
                              fg="#0f0", font=("Courier", 12, "bold"))
@@ -235,9 +318,12 @@ class ClockWidget:
         
         size = 300
         self.root.geometry(f"{size}x{size}")
+        close_btn = tk.Button(self.root, text="x", command=self.on_close, bg="#1a1a1a", fg="#f55", bd=0, font=("Courier", 10, "bold"), activebackground="#333", activeforeground="#faa")
+        close_btn.place(x=6,y=4)
         
         self.canvas = Canvas(self.root, bg="#1a1a1a", highlightthickness=0)
         self.canvas.pack(fill=tk.BOTH, expand=True)
+        close_btn.lift()
         
         self.center_x = size // 2
         self.center_y = size // 2
@@ -333,9 +419,12 @@ class CalendarWidget:
         self.root.configure(bg="#1a1a1a")
         
         self.root.geometry("280x250")
+        close_btn = tk.Button(self.root, text="x", command=self.on_close, bg="#1a1a1a", fg="#f55", bd=0, font=("Courier", 10, "bold"), activebackground="#333", activeforeground="#faa")
+        close_btn.place(x=6,y=4)
         
         frame = tk.Frame(self.root, bg="#1a1a1a")
         frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+        close_btn.lift()
         
         now = time.localtime()
         self.current_year = now.tm_year
@@ -395,13 +484,13 @@ class CalendarWidget:
         for widget in self.cal_frame.winfo_children():
             widget.destroy()
         
-        month_names = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь",
-                      "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"]
+        month_names = ["январь", "февраль", "март", "апрель", "май", "июнь",
+                      "июль", "август", "сентябрь", "октябрь", "ноябрь", "декабрь"]
         self.month_label.config(text=f"{month_names[self.current_month-1]} {self.current_year}")
         
         cal = calendar.monthcalendar(self.current_year, self.current_month)
         
-        days = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"]
+        days = ["пн", "вт", "ср", "чт", "пт", "сб", "вс"]
         for i, day in enumerate(days):
             label = tk.Label(self.cal_frame, text=day, bg="#1a1a1a", fg="#0ff", 
                            font=("Courier", 9, "bold"), width=4)
@@ -437,11 +526,14 @@ class NotesWidget:
         self.root.configure(bg="#1a1a1a")
         
         self.root.geometry("300x400")
+        close_btn = tk.Button(self.root, text="x", command=self.close_with_save, bg="#1a1a1a", fg="#f55", bd=0, font=("Courier", 10, "bold"), activebackground="#333", activeforeground="#faa")
+        close_btn.place(x=6,y=4)
         
         self.notes_file = "notes.txt"
         
         frame = tk.Frame(self.root, bg="#1a1a1a")
         frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+        close_btn.lift()
         
         tk.Label(frame, text="ЗАМЕТКИ", bg="#1a1a1a", fg="#fff", font=("Courier", 12, "bold")).pack(pady=5)
         
@@ -509,9 +601,12 @@ class StopwatchWidget:
         self.root.configure(bg="#1a1a1a")
         
         self.root.geometry("250x150")
+        close_btn = tk.Button(self.root, text="x", command=self.on_close, bg="#1a1a1a", fg="#f55", bd=0, font=("Courier", 10, "bold"), activebackground="#333", activeforeground="#faa")
+        close_btn.place(x=6,y=4)
         
         frame = tk.Frame(self.root, bg="#1a1a1a")
         frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+        close_btn.lift()
         
         self.label = tk.Label(frame, text="00:00:00.000", bg="#1a1a1a", fg="#0ff", 
                              font=("Courier", 18, "bold"))
@@ -524,11 +619,11 @@ class StopwatchWidget:
         self.start_time = 0
         self.elapsed = 0
         
-        self.start_btn = tk.Button(btn_frame, text="Старт", command=self.start_stop, 
+        self.start_btn = tk.Button(btn_frame, text="старт", command=self.start_stop, 
                                   bg="#333", fg="#fff", bd=0, width=8)
         self.start_btn.pack(side=tk.LEFT, padx=5)
         
-        tk.Button(btn_frame, text="Сброс", command=self.reset, 
+        tk.Button(btn_frame, text="сброс", command=self.reset, 
                  bg="#333", fg="#fff", bd=0, width=8).pack(side=tk.LEFT, padx=5)
         
         self.offset_x, self.offset_y = 0, 0
@@ -602,9 +697,12 @@ class SlotMachineWidget:
         self.root.configure(bg="#1a1a1a")
         
         self.root.geometry("400x300")
+        close_btn = tk.Button(self.root, text="x", command=self.on_close, bg="#1a1a1a", fg="#f55", bd=0, font=("Courier", 10, "bold"), activebackground="#333", activeforeground="#faa")
+        close_btn.place(x=6,y=4)
         
         frame = tk.Frame(self.root, bg="#1a1a1a")
         frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+        close_btn.lift()
         
         tk.Label(frame, text="СЛОТЫ", bg="#1a1a1a", fg="#0ff", font=("Courier", 16, "bold")).pack(pady=5)
         
@@ -718,6 +816,8 @@ class ArtApp:
         self.root.attributes("-topmost", True)
         self.root.attributes("-alpha", 0.9) 
         self.root.configure(bg="black")
+        close_btn = tk.Button(self.root, text="x", command=self.on_close, bg="black", fg="#f55", bd=0, font=("Courier", 10, "bold"), activebackground="#333", activeforeground="#faa")
+        close_btn.place(x=6,y=4)
 
         self.speed_val = 0.05
         self.is_paused = False
@@ -741,6 +841,7 @@ class ArtApp:
                                  borderwidth=0, highlightthickness=0,
                                  state=tk.DISABLED, cursor="arrow")
         self.text_area.pack(padx=5, pady=5)
+        close_btn.lift()
         
         self.colors = ["#ff00ff", "#00ffff", "#ffff00", "#ff0000", "#00ff00", "#ff8800"]
         for i, color in enumerate(self.colors):
@@ -989,6 +1090,527 @@ class ArtApp:
                 time.sleep(self.speed_val)
             else:
                 time.sleep(0.1)
+
+class RandomNumberWidget:
+    def __init__(self):
+        self.root = tk.Toplevel()
+        self.root.overrideredirect(True)
+        self.root.attributes("-topmost", True)
+        self.root.attributes("-alpha", 0.9)
+        self.root.configure(bg="#1a1a1a")
+        
+        self.root.geometry("300x250")
+        close_btn = tk.Button(self.root, text="x", command=self.on_close, bg="#1a1a1a", fg="#f55", bd=0, font=("Courier", 10, "bold"), activebackground="#333", activeforeground="#faa")
+        close_btn.place(x=6,y=4)
+        
+        frame = tk.Frame(self.root, bg="#1a1a1a")
+        frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+        close_btn.lift()
+        
+        tk.Label(frame, text="ГЕНЕРАТОР ЧИСЕЛ", bg="#1a1a1a", fg="#0ff", font=("Courier", 14, "bold")).pack(pady=10)
+        
+        self.result_label = tk.Label(frame, text="0", bg="#1a1a1a", fg="#0f0", 
+                                    font=("Courier", 32, "bold"), width=15)
+        self.result_label.pack(pady=20)
+        
+        btn_frame = tk.Frame(frame, bg="#1a1a1a")
+        btn_frame.pack(pady=10)
+        
+        self.min_val = 1
+        self.max_val = 100
+        
+        range_frame = tk.Frame(frame, bg="#1a1a1a")
+        range_frame.pack(pady=5)
+        
+        tk.Label(range_frame, text="от:", bg="#1a1a1a", fg="#fff", font=("Courier", 9)).pack(side=tk.LEFT, padx=5)
+        self.min_entry = tk.Entry(range_frame, bg="#222", fg="#fff", width=8, font=("Courier", 9))
+        self.min_entry.insert(0, str(self.min_val))
+        self.min_entry.pack(side=tk.LEFT, padx=5)
+        
+        tk.Label(range_frame, text="До:", bg="#1a1a1a", fg="#fff", font=("Courier", 9)).pack(side=tk.LEFT, padx=5)
+        self.max_entry = tk.Entry(range_frame, bg="#222", fg="#fff", width=8, font=("Courier", 9))
+        self.max_entry.insert(0, str(self.max_val))
+        self.max_entry.pack(side=tk.LEFT, padx=5)
+        
+        tk.Button(btn_frame, text="генерировать", command=self.generate, 
+                 bg="#333", fg="#fff", bd=0, width=15, font=("Courier", 10)).pack(pady=5)
+        
+        tk.Button(btn_frame, text="авто(1 сек)", command=self.toggle_auto, 
+                 bg="#333", fg="#fff", bd=0, width=15, font=("Courier", 10)).pack(pady=5)
+        
+        self.offset_x, self.offset_y = 0, 0
+        self.bind_drag(frame)
+        
+        self.root.bind("<Escape>", lambda e: self.on_close())
+        self.root.protocol("WM_DELETE_WINDOW", self.on_close)
+        
+        self.closed = False
+        self.auto_mode = False
+    
+    def on_close(self):
+        self.closed = True
+        self.auto_mode = False
+        try:
+            if hasattr(self, 'menu') and hasattr(self, 'key'):
+                self.menu.remove_widget(self.key)
+        except:
+            pass
+        try:
+            self.root.destroy()
+        except:
+            pass
+    
+    def bind_drag(self, widget):
+        widget.bind("<Button-3>", self.start_drag)
+        widget.bind("<B3-Motion>", self.drag_window)
+    
+    def generate(self):
+        try:
+            self.min_val = int(self.min_entry.get())
+            self.max_val = int(self.max_entry.get())
+            if self.min_val > self.max_val:
+                self.min_val, self.max_val = self.max_val, self.min_val
+                self.min_entry.delete(0, tk.END)
+                self.min_entry.insert(0, str(self.min_val))
+                self.max_entry.delete(0, tk.END)
+                self.max_entry.insert(0, str(self.max_val))
+        except:
+            pass
+        
+        number = random.randint(self.min_val, self.max_val)
+        self.result_label.config(text=str(number))
+    
+    def toggle_auto(self):
+        self.auto_mode = not self.auto_mode
+        if self.auto_mode:
+            self.auto_generate()
+    
+    def auto_generate(self):
+        if hasattr(self, 'closed') and self.closed:
+            return
+        if self.auto_mode:
+            self.generate()
+            self.root.after(1000, self.auto_generate)
+    
+    def start_drag(self, event):
+        self.offset_x, self.offset_y = event.x, event.y
+    
+    def drag_window(self, event):
+        x = self.root.winfo_x() + event.x - self.offset_x
+        y = self.root.winfo_y() + event.y - self.offset_y
+        self.root.geometry(f"+{x}+{y}")
+
+class ColorGradientWidget:
+    def __init__(self):
+        self.root = tk.Toplevel()
+        self.root.overrideredirect(True)
+        self.root.attributes("-topmost", True)
+        self.root.attributes("-alpha", 0.9)
+        self.root.configure(bg="#1a1a1a")
+        
+        size = 250
+        self.root.geometry(f"{size}x{size}")
+        close_btn = tk.Button(self.root, text="x", command=self.on_close, bg="#1a1a1a", fg="#f55", bd=0, font=("Courier", 10, "bold"), activebackground="#333", activeforeground="#faa")
+        close_btn.place(x=6,y=4)
+        
+        self.canvas = Canvas(self.root, bg="#1a1a1a", highlightthickness=0)
+        self.canvas.pack(fill=tk.BOTH, expand=True)
+        close_btn.lift()
+        
+        self.offset_x, self.offset_y = 0, 0
+        self.canvas.bind("<Button-3>", self.start_drag)
+        self.canvas.bind("<B3-Motion>", self.drag_window)
+        
+        self.root.bind("<Escape>", lambda e: self.on_close())
+        self.root.protocol("WM_DELETE_WINDOW", self.on_close)
+        
+        self.closed = False
+        self.hue = 0
+        self.update_gradient()
+    
+    def on_close(self):
+        self.closed = True
+        try:
+            if hasattr(self, 'menu') and hasattr(self, 'key'):
+                self.menu.remove_widget(self.key)
+        except:
+            pass
+        try:
+            self.root.destroy()
+        except:
+            pass
+    
+    def update_gradient(self):
+        if hasattr(self, 'closed') and self.closed:
+            return
+        
+        self.canvas.delete("all")
+        width = self.canvas.winfo_width()
+        height = self.canvas.winfo_height()
+        
+        if width > 1 and height > 1:
+            steps = 50
+            for i in range(steps):
+                hue = (self.hue + i * 360 / steps) % 360
+                color = self.hsv_to_hex(hue, 1.0, 1.0)
+                y = i * height / steps
+                self.canvas.create_line(0, y, width, y, fill=color, width=height/steps+1)
+        
+        self.hue = (self.hue + 2) % 360
+        self.root.after(50, self.update_gradient)
+    
+    def hsv_to_hex(self, h, s, v):
+        h = h / 360.0
+        i = int(h * 6)
+        f = h * 6 - i
+        p = v * (1 - s)
+        q = v * (1 - f * s)
+        t = v * (1 - (1 - f) * s)
+        
+        if i % 6 == 0:
+            r, g, b = v, t, p
+        elif i % 6 == 1:
+            r, g, b = q, v, p
+        elif i % 6 == 2:
+            r, g, b = p, v, t
+        elif i % 6 == 3:
+            r, g, b = p, q, v
+        elif i % 6 == 4:
+            r, g, b = t, p, v
+        else:
+            r, g, b = v, p, q
+        
+        return f"#{int(r*255):02x}{int(g*255):02x}{int(b*255):02x}"
+    
+    def start_drag(self, event):
+        self.offset_x, self.offset_y = event.x, event.y
+    
+    def drag_window(self, event):
+        x = self.root.winfo_x() + event.x - self.offset_x
+        y = self.root.winfo_y() + event.y - self.offset_y
+        self.root.geometry(f"+{x}+{y}")
+
+class CountdownTimerWidget:
+    def __init__(self):
+        self.root = tk.Toplevel()
+        self.root.overrideredirect(True)
+        self.root.attributes("-topmost", True)
+        self.root.attributes("-alpha", 0.9)
+        self.root.configure(bg="#1a1a1a")
+        
+        self.root.geometry("280x200")
+        close_btn = tk.Button(self.root, text="x", command=self.on_close, bg="#1a1a1a", fg="#f55", bd=0, font=("Courier", 10, "bold"), activebackground="#333", activeforeground="#faa")
+        close_btn.place(x=6,y=4)
+        
+        frame = tk.Frame(self.root, bg="#1a1a1a")
+        frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+        close_btn.lift()
+        
+        tk.Label(frame, text="ТАЙМЕР", bg="#1a1a1a", fg="#0ff", font=("Courier", 14, "bold")).pack(pady=5)
+        
+        self.time_label = tk.Label(frame, text="00:00:00", bg="#1a1a1a", fg="#0f0", 
+                                   font=("Courier", 24, "bold"))
+        self.time_label.pack(pady=10)
+        
+        input_frame = tk.Frame(frame, bg="#1a1a1a")
+        input_frame.pack(pady=5)
+        
+        tk.Label(input_frame, text="мин:", bg="#1a1a1a", fg="#fff", font=("Courier", 9)).pack(side=tk.LEFT, padx=2)
+        self.min_entry = tk.Entry(input_frame, bg="#222", fg="#fff", width=5, font=("Courier", 9))
+        self.min_entry.insert(0, "0")
+        self.min_entry.pack(side=tk.LEFT, padx=2)
+        
+        tk.Label(input_frame, text="сек:", bg="#1a1a1a", fg="#fff", font=("Courier", 9)).pack(side=tk.LEFT, padx=2)
+        self.sec_entry = tk.Entry(input_frame, bg="#222", fg="#fff", width=5, font=("Courier", 9))
+        self.sec_entry.insert(0, "10")
+        self.sec_entry.pack(side=tk.LEFT, padx=2)
+        
+        btn_frame = tk.Frame(frame, bg="#1a1a1a")
+        btn_frame.pack(pady=10)
+        
+        self.start_btn = tk.Button(btn_frame, text="старт", command=self.start_timer, 
+                                   bg="#333", fg="#fff", bd=0, width=10, font=("Courier", 9))
+        self.start_btn.pack(side=tk.LEFT, padx=5)
+        
+        tk.Button(btn_frame, text="сброс", command=self.reset, 
+                 bg="#333", fg="#fff", bd=0, width=10, font=("Courier", 9)).pack(side=tk.LEFT, padx=5)
+        
+        self.offset_x, self.offset_y = 0, 0
+        self.bind_drag(frame)
+        
+        self.root.bind("<Escape>", lambda e: self.on_close())
+        self.root.protocol("WM_DELETE_WINDOW", self.on_close)
+        
+        self.closed = False
+        self.running = False
+        self.remaining = 0
+        self.update()
+    
+    def on_close(self):
+        self.closed = True
+        self.running = False
+        try:
+            if hasattr(self, 'menu') and hasattr(self, 'key'):
+                self.menu.remove_widget(self.key)
+        except:
+            pass
+        try:
+            self.root.destroy()
+        except:
+            pass
+    
+    def bind_drag(self, widget):
+        widget.bind("<Button-3>", self.start_drag)
+        widget.bind("<B3-Motion>", self.drag_window)
+    
+    def start_timer(self):
+        if self.running:
+            self.running = False
+            self.start_btn.config(text="Старт")
+        else:
+            try:
+                minutes = int(self.min_entry.get()) if self.min_entry.get() else 0
+                seconds = int(self.sec_entry.get()) if self.sec_entry.get() else 0
+                self.remaining = minutes * 60 + seconds
+                if self.remaining > 0:
+                    self.running = True
+                    self.start_btn.config(text="стоп")
+                    self.min_entry.config(state=tk.DISABLED)
+                    self.sec_entry.config(state=tk.DISABLED)
+            except:
+                pass
+    
+    def reset(self):
+        self.running = False
+        self.remaining = 0
+        self.start_btn.config(text="старт")
+        self.min_entry.config(state=tk.NORMAL)
+        self.sec_entry.config(state=tk.NORMAL)
+        self.update_display()
+    
+    def update(self):
+        if hasattr(self, 'closed') and self.closed:
+            return
+        
+        if self.running and self.remaining > 0:
+            self.remaining -= 1
+            if self.remaining == 0:
+                self.running = False
+                self.start_btn.config(text="старт")
+                self.min_entry.config(state=tk.NORMAL)
+                self.sec_entry.config(state=tk.NORMAL)
+                self.time_label.config(fg="#f00")
+                self.root.after(1000, lambda: self.time_label.config(fg="#0f0"))
+        
+        self.update_display()
+        self.root.after(1000, self.update)
+    
+    def update_display(self):
+        hours = self.remaining // 3600
+        minutes = (self.remaining % 3600) // 60
+        seconds = self.remaining % 60
+        self.time_label.config(text=f"{hours:02d}:{minutes:02d}:{seconds:02d}")
+    
+    def start_drag(self, event):
+        self.offset_x, self.offset_y = event.x, event.y
+    
+    def drag_window(self, event):
+        x = self.root.winfo_x() + event.x - self.offset_x
+        y = self.root.winfo_y() + event.y - self.offset_y
+        self.root.geometry(f"+{x}+{y}")
+
+class BlackjackWidget:
+    def __init__(self):
+        self.root = tk.Toplevel()
+        self.root.overrideredirect(True)
+        self.root.attributes("-topmost", True)
+        self.root.attributes("-alpha", 0.9)
+        self.root.configure(bg="#1a1a1a")
+        
+        self.root.geometry("350x450")
+        close_btn = tk.Button(self.root, text="x", command=self.on_close, bg="#1a1a1a", fg="#f55", bd=0, font=("Courier", 10, "bold"), activebackground="#333", activeforeground="#faa")
+        close_btn.place(x=6,y=4)
+        
+        frame = tk.Frame(self.root, bg="#1a1a1a")
+        frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+        close_btn.lift()
+        
+        tk.Label(frame, text="БЛЭКДЖЕК", bg="#1a1a1a", fg="#0ff", font=("Courier", 16, "bold")).pack(pady=5)
+        
+        self.dealer_frame = tk.Frame(frame, bg="#1a1a1a")
+        self.dealer_frame.pack(pady=10)
+        
+        tk.Label(self.dealer_frame, text="дилер:", bg="#1a1a1a", fg="#fff", font=("Courier", 10, "bold")).pack()
+        self.dealer_label = tk.Label(self.dealer_frame, text="", bg="#1a1a1a", fg="#0ff", 
+                                     font=("Courier", 12), width=30)
+        self.dealer_label.pack()
+        self.dealer_score_label = tk.Label(self.dealer_frame, text="счет карт: 0", bg="#1a1a1a", fg="#aaa", 
+                                           font=("Courier", 10))
+        self.dealer_score_label.pack()
+        
+        self.player_frame = tk.Frame(frame, bg="#1a1a1a")
+        self.player_frame.pack(pady=10)
+        
+        tk.Label(self.player_frame, text="игрок:", bg="#1a1a1a", fg="#fff", font=("Courier", 10, "bold")).pack()
+        self.player_label = tk.Label(self.player_frame, text="", bg="#1a1a1a", fg="#0f0", 
+                                     font=("Courier", 12), width=30)
+        self.player_label.pack()
+        self.player_score_label = tk.Label(self.player_frame, text="счет карт: 0", bg="#1a1a1a", fg="#aaa", 
+                                          font=("Courier", 10))
+        self.player_score_label.pack()
+        
+        self.result_label = tk.Label(frame, text="", bg="#1a1a1a", fg="#ff0", 
+                                    font=("Courier", 12, "bold"))
+        self.result_label.pack(pady=10)
+        
+        btn_frame = tk.Frame(frame, bg="#1a1a1a")
+        btn_frame.pack(pady=10)
+        
+        self.hit_btn = tk.Button(btn_frame, text="еще", command=self.hit, 
+                                 bg="#333", fg="#fff", bd=0, width=10, font=("Courier", 10))
+        self.hit_btn.pack(side=tk.LEFT, padx=5)
+        
+        self.stand_btn = tk.Button(btn_frame, text="стоп", command=self.stand, 
+                                  bg="#333", fg="#fff", bd=0, width=12, font=("Courier", 10))
+        self.stand_btn.pack(side=tk.LEFT, padx=5)
+        
+        self.new_game_btn = tk.Button(btn_frame, text="новая игра", command=self.new_game, 
+                                      bg="#333", fg="#fff", bd=0, width=12, font=("Courier", 10))
+        self.new_game_btn.pack(side=tk.LEFT, padx=5)
+        
+        self.offset_x, self.offset_y = 0, 0
+        self.bind_drag(frame)
+        
+        self.root.bind("<Escape>", lambda e: self.on_close())
+        self.root.protocol("WM_DELETE_WINDOW", self.on_close)
+        
+        self.closed = False
+        self.deck = []
+        self.dealer_hand = []
+        self.player_hand = []
+        self.game_over = False
+        self.new_game()
+    
+    def on_close(self):
+        self.closed = True
+        try:
+            if hasattr(self, 'menu') and hasattr(self, 'key'):
+                self.menu.remove_widget(self.key)
+        except:
+            pass
+        try:
+            self.root.destroy()
+        except:
+            pass
+    
+    def bind_drag(self, widget):
+        widget.bind("<Button-3>", self.start_drag)
+        widget.bind("<B3-Motion>", self.drag_window)
+    
+    def create_deck(self):
+        suits = ['♠', '♥', '♦', '♣']
+        ranks = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
+        deck = []
+        for suit in suits:
+            for rank in ranks:
+                deck.append(f"{rank}{suit}")
+        random.shuffle(deck)
+        return deck
+    
+    def get_card_value(self, card):
+        rank = card[:-1]
+        if rank == 'A':
+            return 11
+        elif rank in ['J', 'Q', 'K']:
+            return 10
+        else:
+            return int(rank)
+    
+    def calculate_score(self, hand):
+        score = 0
+        aces = 0
+        for card in hand:
+            value = self.get_card_value(card)
+            if value == 11:
+                aces += 1
+            score += value
+        
+        while score > 21 and aces > 0:
+            score -= 10
+            aces -= 1
+        
+        return score
+    
+    def new_game(self):
+        self.deck = self.create_deck()
+        self.dealer_hand = [self.deck.pop(), self.deck.pop()]
+        self.player_hand = [self.deck.pop(), self.deck.pop()]
+        self.game_over = False
+        self.result_label.config(text="")
+        self.update_display()
+        self.hit_btn.config(state=tk.NORMAL)
+        self.stand_btn.config(state=tk.NORMAL)
+    
+    def hit(self):
+        if self.game_over:
+            return
+        self.player_hand.append(self.deck.pop())
+        player_score = self.calculate_score(self.player_hand)
+        self.update_display()
+        
+        if player_score > 21:
+            self.game_over = True
+            self.result_label.config(text="перебор", fg="#f00")
+            self.hit_btn.config(state=tk.DISABLED)
+            self.stand_btn.config(state=tk.DISABLED)
+    
+    def stand(self):
+        if self.game_over:
+            return
+        self.game_over = True
+        self.hit_btn.config(state=tk.DISABLED)
+        self.stand_btn.config(state=tk.DISABLED)
+        
+        while self.calculate_score(self.dealer_hand) < 17:
+            self.dealer_hand.append(self.deck.pop())
+        
+        self.update_display()
+        self.check_winner()
+    
+    def check_winner(self):
+        player_score = self.calculate_score(self.player_hand)
+        dealer_score = self.calculate_score(self.dealer_hand)
+        
+        if dealer_score > 21:
+            self.result_label.config(text="дилер перебрал", fg="#0f0")
+        elif player_score > dealer_score:
+            self.result_label.config(text="выигрыш", fg="#0f0")
+        elif player_score < dealer_score:
+            self.result_label.config(text="еще посидим", fg="#f00")
+        else:
+            self.result_label.config(text="ничья", fg="#ff0")
+    
+    def update_display(self):
+        player_score = self.calculate_score(self.player_hand)
+        dealer_score = self.calculate_score(self.dealer_hand)
+        
+        self.player_label.config(text=" ".join(self.player_hand))
+        self.player_score_label.config(text=f"Очки: {player_score}")
+        
+        if self.game_over:
+            self.dealer_label.config(text=" ".join(self.dealer_hand))
+            self.dealer_score_label.config(text=f"Очки: {dealer_score}")
+        else:
+            self.dealer_label.config(text=f"{self.dealer_hand[0]} ?")
+            self.dealer_score_label.config(text="Очки: ?")
+    
+    def start_drag(self, event):
+        self.offset_x, self.offset_y = event.x, event.y
+    
+    def drag_window(self, event):
+        x = self.root.winfo_x() + event.x - self.offset_x
+        y = self.root.winfo_y() + event.y - self.offset_y
+        self.root.geometry(f"+{x}+{y}")
 
 if __name__ == "__main__":
     menu = WidgetMenu()
